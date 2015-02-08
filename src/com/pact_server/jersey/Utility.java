@@ -3,6 +3,9 @@ package com.pact_server.jersey;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class Utility {
 	/**
 	 * Null check Method
@@ -53,5 +56,41 @@ public class Utility {
 		return obj.toString(); 
 	}
 	
+	/**
+	 * Array of characters used for hexa-decimal conversion.
+	 */
+	private static final byte charactersSet[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	/**
+	 * Will return the hash of a password.
+	 * 
+	 * @param password
+	 *            User password
+	 * @return hexa-decimal string representation of the hashed password.
+	 * @throws NoSuchAlgorithmException
+	 *             Thrown in case the hash algorithm could not be found.
+	 */
+	public static String hashPassword(String password) throws NoSuchAlgorithmException {
+		return convertBytesToHexString(MessageDigest.getInstance("SHA-256").digest(password.getBytes()));
+	}
+
+	/**
+	 * Converts a byte array to the corresponding hexa-decimal string
+	 * representation.
+	 * 
+	 * @param array
+	 *            Byte array
+	 * @return Hexa-decimal string
+	 */
+	public static String convertBytesToHexString(byte array[]) {
+		byte stringBytes[] = new byte[2 * array.length];
+
+		for (int i = 0; i < array.length; i++) {
+			stringBytes[2 * i] = charactersSet[(array[i] & 0xf0) >> 4];
+			stringBytes[2 * i + 1] = charactersSet[array[i] & 0x0f];
+		}
+
+		return new String(stringBytes);
+	}
 }
 

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DBConnection {
 	/**
@@ -43,11 +42,11 @@ public class DBConnection {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Statement stmt = dbConn.createStatement();
-			String query = "SELECT * FROM user WHERE pseudo = '" + pseudo
-					+ "' AND password=" + "'" + password + "'";
+			java.sql.PreparedStatement preparedStatement = dbConn.prepareStatement("SELECT * FROM user WHERE pseudo = ? AND password = ?;");
+			preparedStatement.setString( 1, pseudo );
+			preparedStatement.setString( 2, Utility.hashPassword(password));
 			//System.out.println(query);
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				//System.out.println(rs.getString(1) + rs.getString(2) + rs.getString(3));
 				isUserAvailable = true;
@@ -89,11 +88,14 @@ public class DBConnection {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Statement stmt = dbConn.createStatement();
-			String query = "INSERT into user(pseudo, password, first_name, last_name, email) values('"+ pseudo + "',"+"'"
-					+ password + "','" + first_name + "','" + last_name + "','" + email + "')";
+			java.sql.PreparedStatement preparedStatement = dbConn.prepareStatement("INSERT into user(pseudo, password, first_name, last_name, email) values(?,?,?,?,?);");
+			preparedStatement.setString( 1, pseudo );
+			preparedStatement.setString( 2, Utility.hashPassword(password));
+			preparedStatement.setString( 3, first_name );
+			preparedStatement.setString( 4, last_name);
+			preparedStatement.setString( 5, email );						
 			//System.out.println(query);
-			int records = stmt.executeUpdate(query);
+			int records = preparedStatement.executeUpdate();
 			//System.out.println(records);
 			//When record is successfully inserted
 			if (records > 0) {

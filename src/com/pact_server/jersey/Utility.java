@@ -44,7 +44,7 @@ public class Utility {
 	 * @param err_msg
 	 * @return
 	 */
-	public static String constructJSON(String tag, boolean status,String err_msg) {
+	public static String constructJSON(String tag, boolean status, String err_msg) {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("tag", tag);

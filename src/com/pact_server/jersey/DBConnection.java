@@ -118,5 +118,82 @@ public class DBConnection {
 		}
 		return insertStatus;
 	}
+	
+	public static boolean insertTag(String pseudo, String object_name, String picture) throws SQLException, Exception {
+		boolean insertStatus = false;
+		Connection dbConn = null;
+		try {
+			try {
+				dbConn = DBConnection.createConnection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			java.sql.PreparedStatement preparedStatement = dbConn.prepareStatement("INSERT into tag(pseudo_owner, object_name, picture) values(?,?,?);");
+			preparedStatement.setString( 1, pseudo );
+			preparedStatement.setString( 2, object_name);
+			preparedStatement.setString( 3, picture);					
+			//System.out.println(query);
+			int records = preparedStatement.executeUpdate();
+			//System.out.println(records);
+			//When record is successfully inserted
+			if (records > 0) {
+				insertStatus = true;
+			}
+		} catch (SQLException sqle) {
+			//sqle.printStackTrace();
+			throw sqle;
+		} catch (Exception e) {
+			//e.printStackTrace();
+			// TODO Auto-generated catch block
+			if (dbConn != null) {
+				dbConn.close();
+			}
+			throw e;
+		} finally {
+			if (dbConn != null) {
+				dbConn.close();
+			}
+		}
+		return insertStatus;
+	}
+	
+	public static boolean deleteTag(String pseudo, String object_name) throws SQLException, Exception {
+		boolean deleteStatus = false;
+		Connection dbConn = null;
+		try {
+			try {
+				dbConn = DBConnection.createConnection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			java.sql.PreparedStatement preparedStatement = dbConn.prepareStatement("DELETE FROM tag WHERE pseudo_owner = ? && object_name = ?;");
+			preparedStatement.setString( 1, pseudo );
+			preparedStatement.setString( 2, object_name);					
+			//System.out.println(query);
+			int records = preparedStatement.executeUpdate();
+			//System.out.println(records);
+			//When record is successfully inserted
+			if (records > 0) {
+				deleteStatus = true;
+			}
+		} catch (SQLException sqle) {
+			//sqle.printStackTrace();
+			throw sqle;
+		} catch (Exception e) {
+			//e.printStackTrace();
+			// TODO Auto-generated catch block
+			if (dbConn != null) {
+				dbConn.close();
+			}
+			throw e;
+		} finally {
+			if (dbConn != null) {
+				dbConn.close();
+			}
+		}
+		return deleteStatus;
+	}
 }
 
